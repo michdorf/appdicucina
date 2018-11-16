@@ -26,7 +26,8 @@
       <h1>4. majs køkkenapp</h1>
       <article>
         <section>
-          <textarea placeholder="Besked til Jørgen..."></textarea>
+          <textarea placeholder="Besked til Jørgen..." v-model="curBesked"></textarea>
+          <button v-on:click="saveMes()">Send afsted</button>
         </section>
         <section v-for="besked in beskeder">
           <b>{{besked.fra}}</b>: {{besked.besked}}
@@ -41,18 +42,24 @@
           setBeskeder(beskeder) {
             this.beskeder = beskeder;
           },
+          saveMes() {
+            if (this.curBesked) { // Live variabel opdateret fra textarea og gemt nede i data()
+                db.addmes(this.curBesked);
+                this.curBesked = "";
+            }
+          }
         },
         data() {
           return {
-            beskeder: []
+            beskeder: [],
+            curBesked: ""
           }
         }
       });
 
       var db = new DB();
       var user = new User();
-      user.signin("test@test.dk", "12345678");
-      db.addmes("Bjarke er nice");
+      user.signin();
     </script>
   </body>
 </html>

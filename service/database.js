@@ -4,7 +4,9 @@ function DB() {
   this.beskeder = [];
 
   this.addmes = function (mes) {
+    var uid = firebase.auth().currentUser.uid;
     var besked = {
+      uid: uid,
       fra: "ukendt",
       besked: mes,
       oprettet: Date.now()
@@ -19,6 +21,7 @@ function DB() {
     var db = this;
     return firebase.database().ref("beskeder/").on('value', function(snapshot) {
       var beskeder = snapshot.val();
+      db.beskeder = [];
       for (var k in beskeder) {
         db.beskeder.push(beskeder[k]);
       }
@@ -34,13 +37,19 @@ function DB() {
 function User() {
 
   this.signin = function (email, password) {
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    var errorFunc = function(error) {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
       // ...
       console.error("Fejl med at logge ind", error);
-    });
+    };
+    
+    if (email && password) {
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(errorFunc);
+    } else {
+        firebase.auth().signInAnonymously().catch(errorFunc);
+    }
   }
 
   firebase.auth().onAuthStateChanged(function(user) {
