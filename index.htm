@@ -2,9 +2,11 @@
 <html lang="da" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="10" />
+    <!-- <meta http-equiv="refresh" content="10" /> -->
     <link rel="stylesheet" href="./css/main.css" type="text/css" />
     <title>4. maj køkken app</title>
+    <script type="text/javascript" src="./vue/vue.js"></script>
+    <script type="text/javascript" src="./service/database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.8/firebase.js"></script>
     <script>
     // Initialize Firebase
@@ -20,9 +22,37 @@
     </script>
   </head>
   <body>
-    <h1>4. majs køkkenapp</h1>
-    <div>
-      <textarea placeholder="Besked til Jørgen..."></textarea>
+    <div id="app">
+      <h1>4. majs køkkenapp</h1>
+      <article>
+        <section>
+          <textarea placeholder="Besked til Jørgen..."></textarea>
+        </section>
+        <section v-for="besked in beskeder">
+          <b>{{besked.fra}}</b>: {{besked.besked}}
+        </section>
+      </article>
     </div>
+
+    <script type="text/javascript">
+      var app = new Vue({
+        el: "#app",
+        methods: {
+          setBeskeder(beskeder) {
+            this.beskeder = beskeder;
+          },
+        },
+        data() {
+          return {
+            beskeder: []
+          }
+        }
+      });
+
+      var db = new DB();
+      var user = new User();
+      user.signin("test@test.dk", "12345678");
+      db.addmes("Bjarke er nice");
+    </script>
   </body>
 </html>
