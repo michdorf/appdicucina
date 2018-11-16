@@ -1,1 +1,28 @@
-/home/disaccordo/Vue.js/vue/vue.helper.js
+/**
+ * Un modo di fare obj = nuovo_obj con vue.js dynamic objects
+ * Non rimuove proprietà non presente in nuovo
+ * @param Object obj
+ * @param Object nuovo
+ */
+function unisci_vue_oggetti(obj, nuovo) {
+  if (Array.isArray(nuovo)) {
+    return unisci_vue_array(obj, nuovo);
+  }
+
+  for (var key in nuovo) {
+    obj[key] = nuovo[key];
+  }
+
+  return obj;
+};
+
+function unisci_vue_array(array, nuovo) {
+  for (var i = 0; i < nuovo.length; i++) {
+    if (typeof array[i] === "undefined") {
+      array.push(nuovo[i]);
+    } else {
+      unisci_vue_oggetti(array[i], nuovo[i]);
+    }
+  }
+  return;
+}
